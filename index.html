@@ -21,38 +21,57 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
     <link href="https://vjs.zencdn.net/7.6.6/video-js.css" rel="stylesheet" />
+    <style>
+        a{ color: #136c9f;text-decoration: underline; text-underline-position: under;}
+        a:hover { color:#1591da; text-decoration: underline; text-underline-position: under;}
+        h2, h5, h6 { font-weight: bold;}
+        .grid img { max-width: 30px; margin:2px;}
+    </style>
 </head>
 <body>
-    <div id="header">
-        <div class="container-fluid border-bottom p-2 mb-5">
+    <div id="header" class="fixed-top">
+        <div class="container-fluid border-bottom p-2 mb-5 bg-white">
             <ul class="nav justify-content-center">
               <li class="nav-item">
-                <a class="nav-link active" href="#">Active</a>
+                <a class="nav-link" href="#about">About Me</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#work">工作經歷</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#portfolio">網頁設計作品集</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                <a class="nav-link" href="#video">案例影片</a>
+              </li>
+              <li>
+                <a class="rounded" href="https://www.linkedin.com/in/tsai-chin-lin-310a2666/" target="_blank" role="button" style="font-size: 1.5em;"><i class="fab fa-linkedin"></i></a>
               </li>
             </ul>
         </div>
     </div>
-    <div class="container p-5 mb-5 text-center">
+    <div class="container p-5 mb-5 text-center" id="about">
+        <p class="p-4"></p>
         <div class="row">
             <div class="col">
-                <svg class="bd-placeholder-img rounded-circle mb-3" width="160" height="160"><rect fill="#777" width="100%" height="100%"/></svg>
+                <img src="images/S__7856130.jpg" class="bd-placeholder-img rounded-circle mb-3" width="160" height="160">
                 <h2>Tsai Chin Lin</h2>
                 <p>畢業於 景文科技大學 視覺傳達設計系 (副學士) <br>目前任職於Vpon威朋大數據股份有限公司，擔任資深視覺設計師</p>
-                <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
+                <div class="grid">
+                    <img src="images/ps.svg">
+                    <img src="images/ai.svg">
+                    <img src="images/an.svg">
+                    <img src="images/xd.svg">
+                    <img src="images/css.svg">
+                    <img src="images/html5.svg">
+                    <img src="images/bootstrap.svg">
+                </div>
+                <p></p>
             </div>
         </div>
     </div>
     <section class="bg-light p-5">
-        <div class="container p-5">
+        <div class="container p-5" id="work">
             <div class="row m-5">
                 <div class="col text-center">
                     <h2>工作經歷 / Work Experience</h2>
@@ -130,8 +149,8 @@
         </div>
     </section>
     <section class="p-5">
-        <div class="container p-5 text-center">
-            <h2>作品集</h2>
+        <div class="container p-5 text-center" id="portfolio">
+            <h2>網頁設計作品集</h2>
             <div class="row mt-5">
                <div class="col-lg-4 p-2">
                    <a href="images/miniSite.jpg" data-toggle="lightbox" data-gallery="gallery">
@@ -158,19 +177,19 @@
                     <img src="images/1612_01.jpg" alt="彩虹糖" class="img-fluid rounded border">
 
                 </a>
-                    <p>彩虹糖</p>
+                    <p><a href="http://tw-img.vpon.com/img/campaigns/201701_Skittles/index.html" target="_blank">彩虹糖</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1612_02.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1612_02.jpg" alt="酷聖石聖誕節" class="img-fluid rounded border">
                 </a>
-                <p>酷聖石聖誕節活動宣傳</p>
+                <p><a href="https://cmp.vpon.com/coldstone201612demo/index.html" target="_blank">酷聖石聖誕節</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1710_innisfree.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1710_innisfree.jpg" alt="innisfree" class="img-fluid rounded border">
                 </a>
-                    <p>innisfree 聖誕節活動宣傳</p>
+                    <p><a href="https://a2.vpon.com/img/campaigns/201711_innisfree/index.html" target="_blank">innisfree 聖誕節活動宣傳</a></p>
                 </div>
             </div>
             <div class="row">
@@ -178,19 +197,19 @@
                 <a href="images/1711.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1711.jpg" alt="Biore集光計畫" class="img-fluid rounded border">
                 </a>
-                    <p>Biore集光計畫活動宣傳</p>
+                    <p><a href="https://tw-img.vpon.com/img/campaigns/201712_Biore/" target="_blank">Biore集光計畫活動宣傳</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1804.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1804.jpg" alt="Onetouch血糖機" class="img-fluid rounded border">
                 </a>
-                    <p>Onetouch血糖機母親節活動宣傳</p>
+                    <p><a href="https://a2.vpon.com/img/campaigns/201804_onetouch/index.html" target="_blank">Onetouch血糖機母親節活動宣傳</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1805.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1805.jpg" alt="可樂果" class="img-fluid rounded border">
                 </a>
-                    <p>可樂果世足賽活動宣傳</p>
+                    <p><a href="https://tw-img.vpon.com/img/campaigns/201806_lianhwa/" target="_blank">可樂果世足賽活動宣傳</a></p>
                </div>
             </div>
             <div class="row">
@@ -198,19 +217,19 @@
                 <a href="images/1809.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1809.jpg" alt="桂格燕麥飲" class="img-fluid rounded border">
                 </a>
-                    <p>桂格燕麥飲活動宣傳</p>
+                    <p><a href="https://vpon-demo.vpon.com/campaigns/201809_sfworldwide/web/index.html" target="_blank">桂格燕麥飲活動宣傳</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1811_01.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1811_01.jpg" alt="八方雲集" class="img-fluid rounded border">
                 </a>
-                <p>八方雲集活動宣傳</p>
+                <p><a href="https://8way2018winter.vpon.com/index.html?_t=1&utm_source=QRCode&utm_medium=link1&utm_campaign=QRCode_link1&vpadn_src=QRCode_link1" target="_blank">八方雲集活動宣傳</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1811_02.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1811_02.jpg" alt="飛柔X幾米媒體宣傳" class="img-fluid rounded border">
                 </a>
-                <p>飛柔X幾米活動宣傳</p>
+                <p><a href="https://tw-img.vpon.com/img/campaigns/201812_pert/index.html" target="_blank">飛柔X幾米活動宣傳</a></p>
                 </div>
             </div>
             <div class="row">
@@ -218,25 +237,25 @@
                 <a href="images/1908.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1908.jpg" alt="甦密" class="img-fluid rounded border">
                 </a>
-                    <p>甦密活動宣傳</p>
+                    <p><a href="https://a2.vpon.com/img/campaigns/201908_LG_sum37/index.html" target="_blank">甦密活動宣傳</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                 <a href="images/1909.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1909.jpg" alt="台灣三菱電機走天下活動宣傳" class="img-fluid rounded border">
                 </a>
-                <p>台灣三菱電機走天下活動宣傳</p>
+                <p><a href="https://a2.vpon.com/img/campaigns/201910_mitsubishi/test/index.html" target="_blank">台灣三菱電機走天下活動宣傳</a></p>
                 </div>
                <div class="col-lg-4 p-2">
                    <a href="images/1912.jpg" data-toggle="lightbox" data-gallery="gallery">
                     <img src="images/1912.jpg" alt="八幡平" class="img-fluid rounded border">
                    </a>
-                   <p>日本八幡平滑雪旅遊活動宣傳</p>
+                   <p><a href="https://tw-img.vpon.com/img/campaigns/202001_JP_Hachimantai/index.html" target="_blank">日本八幡平滑雪旅遊活動宣傳</a></p>
                 </div>
             </div>
         </div>
     </section>
     <section class="p-5">
-        <div class="container-fluid p-5 text-center">
+        <div class="container-fluid p-5 text-center" id="video">
             <h2>創意互動影片展示</h2>
             <div class="row mt-5">
                <div class="col-md-2 col-sm-6 p-1"> 
@@ -345,7 +364,7 @@
                   <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin" controls preload="auto" width="536" height="796" poster="images/b18.png" data-setup='{"fluid": true}'>
                     <source src="images/a18.mp4" type="video/mp4" />
                   </video>
-                  <p>萊爾富xLazy MARU活動宣傳</p>
+                  <p>萊爾富xLazy MARU活動宣傳</p> 
                </div>
             </div>
         </div>
