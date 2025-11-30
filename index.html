@@ -1,418 +1,528 @@
 <!DOCTYPE html>
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
-<!--[if !IE]><!-->
-<html lang="zh-TW">
-<!--<![endif]-->
+<html lang="zh-Hant-TW">
 <head>
-    <meta charset="utf-8">
-    <title>Tsai Chin Lin</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta content="個人作品集網站。" name="description">
-    <meta content="網頁設計, 前端, HTML, CSS, jQuery, javascript" name="keywords">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Global styles START -->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-    <link rel="stylesheet" href="stylesheets/v4.css">
-    <!-- Global styles END -->
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
-    <link href="https://vjs.zencdn.net/7.6.6/video-js.css" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tsai Chin Lin | Senior Visual Designer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        a{ color: #136c9f;text-decoration: underline; text-underline-position: under;}
-        a:hover { color:#1591da; text-decoration: underline; text-underline-position: under;}
-        h2, h5, h6 { font-weight: bolder;}
-        .grid img { max-width: 30px; margin:2px;}
-        p { color: #888;}
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #fcfcfc; color: #333; }
+        
+        /* 軟體圖示 */
+        .soft-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: white; border-radius: 4px; margin: 0 4px; transition: transform 0.2s; }
+        .soft-icon:hover { transform: translateY(-3px); }
+        .bg-ps { background-color: #001e36; color: #31a8ff; border: 1px solid #31a8ff; }
+        .bg-ai { background-color: #330000; color: #ff9a00; border: 1px solid #ff9a00; }
+        .bg-an { background-color: #330000; color: #db0000; border: 1px solid #db0000; }
+        .bg-xd { background-color: #2e001f; color: #ff2bc2; border: 1px solid #ff2bc2; }
+        .bg-css { background-color: #006eb3; }
+        .bg-html { background-color: #e34c26; }
+        .bg-bs { background-color: #563d7c; }
+
+        /* 瀑布流 Masonry */
+        .masonry-grid { column-count: 1; column-gap: 1.5rem; }
+        @media (min-width: 768px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        .masonry-item { break-inside: avoid; margin-bottom: 1.5rem; }
+
+        /* 一般卡片遮罩 (適用於圖片作品) */
+        .image-card .card-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .image-card:hover .card-overlay { opacity: 1; }
+
+        /* --- 影片卡片特殊設定 (修正重點) --- */
+        /* 預設顯示標題與漸層 (靜止狀態) */
+        .video-card .card-overlay {
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+            opacity: 1; /* 預設是看得到的 */
+            transition: opacity 0.3s ease;
+        }
+        
+        /* 當滑鼠移入(電腦) 或 影片播放類別被加入(手機)時，隱藏遮罩 */
+        .video-card:hover .card-overlay,
+        .video-card.playing .card-overlay {
+            opacity: 0; /* 讓文字和黑底完全消失，只看影片 */
+        }
+        
+        video { object-fit: cover; width: 100%; height: 100%; display: block;}
+        
+        /* Lightbox */
+        #lightbox { transition: opacity 0.3s ease; }
+        #lightbox.hidden { opacity: 0; pointer-events: none; }
+        #lightbox:not(.hidden) { opacity: 1; pointer-events: auto; }
     </style>
 </head>
-<body>
-    <div id="header" class="fixed-top">
-        <div class="container-fluid border-bottom p-2 mb-5 bg-white">
-            <ul class="nav justify-content-center">
-              <li class="nav-item">
-                <a class="nav-link" href="#about">About Me</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#work">工作經歷</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#portfolio">網頁設計</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#video">案例影片</a>
-              </li>
-              <li>
-                <a class="rounded" href="https://www.linkedin.com/in/tsai-chin-lin-310a2666/" target="_blank" role="button" style="font-size: 1.5em;"><i class="fab fa-linkedin"></i></a>
-              </li>
-            </ul>
-        </div>
-    </div>
-    <div class="container p-5 mb-5 text-center" id="about">
-        <p class="p-4"></p>
-        <div class="row">
-            <div class="col">
-                <img src="images/S__7856130.jpg" class="bd-placeholder-img rounded-circle mb-3" width="160" height="160">
-                <h2>Tsai Chin Lin</h2>
-                <p>畢業於 景文科技大學 視覺傳達設計系 (副學士) <br>目前任職於Vpon威朋大數據股份有限公司，擔任資深視覺設計師</p>
-                <div class="grid">
-                    <img src="images/ps.svg">
-                    <img src="images/ai.svg">
-                    <img src="images/an.svg">
-                    <img src="images/xd.svg">
-                    <img src="images/css.svg">
-                    <img src="images/html5.svg">
-                    <img src="images/bootstrap.svg">
-                </div>
-                <p></p>
-            </div>
-        </div>
-    </div>
-    <section class="bg-light p-5">
-        <div class="container p-5" id="work">
-            <div class="row m-5">
-                <div class="col text-center">
-                    <h2>工作經歷 / Work Experience</h2>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2011/10～</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>威朋大數據股份有限公司</h5>
-                    <h6>資深視覺設計師</h6>
-                    <p>行動媒體與廣告創意設計製作，能有效與內部程式人員溝通協調。</p>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2010/03～2011/10</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>依斯楚互動娛樂股份有限公司</h5>
-                    <h6>資深網頁設計師</h6>
-                    <p>負責網頁設計，包含遊戲官網、廣告Banner設計以及活動相關視覺。</p>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2009/04～2010/03</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>口袋移動科技股份有限公司</h5>
-                    <h6>資深網頁設計師</h6>
-                    <p>活動網頁製作、手機電子書、廣告Banner設計製作。</p>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2008/04～2008/11</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>友信網路股份有限公司</h5>
-                    <h6>資深網頁設計師</h6>
-                    <p>負責活動網頁、廣告Banner設計製作。</p>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2006/12～2008/04</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>隨身遊戲股份有限公司</h5>
-                    <h6>網頁設計師</h6>
-                    <p>手機鈴聲下載相關活動網頁、廣告Banner設計製作。</p>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2003/03～2006/12</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>摩利在線股份有限公司</h5>
-                    <h6>網頁設計師</h6>
-                    <p>活動網頁製作，AVATAR物件點陣圖繪製。</p>
-                </div>
-            </div>
-            <div class="row justify-content-center m-2">
-                <div class="col-md-2">
-                    <p>2002/08～1998/09</p>
-                </div>
-                <div class="col-md-6">
-                    <h5>宏廣股份有限公司</h5>
-                    <h6>動畫師</h6>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="p-5">
-        <div class="container p-5 text-center" id="portfolio">
-            <h2>網頁設計作品</h2>
-            <p>請使用手機掃描 QR code，以獲得最佳的瀏覽體驗</p>
-            <div class="row mt-5">
-               <div class="col-lg-4 p-2">
-                   <a href="images/miniSite.jpg" data-toggle="lightbox" data-gallery="gallery">
-                       <img src="images/miniSite.jpg" alt="miniSite" class="img-fluid rounded border">
-                   </a>
-                   <p>mini Site 宣傳</p>
-               </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1612_03.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1612_03.jpg" alt="年報推廣" class="img-fluid rounded border">
-                </a>
-                    <p>年報推廣</p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1612_04.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1612_04.jpg" alt="年報推廣" class="img-fluid rounded border">
-                </a>
-                    <p>年報推廣</p>
-                </div>
-            </div>
-            <div class="row">
-               <div class="col-lg-4 p-2">
-                <a href="images/1612_01.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1612_01.jpg" alt="彩虹糖" class="img-fluid rounded border">
+<body class="antialiased">
 
-                </a>
-                    <p><a href="http://tw-img.vpon.com/img/campaigns/201701_Skittles/index.html" target="_blank">彩虹糖</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1612_02.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1612_02.jpg" alt="酷聖石聖誕節" class="img-fluid rounded border">
-                </a>
-                <p><a href="https://cmp.vpon.com/coldstone201612demo/index.html" target="_blank">酷聖石聖誕節</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1710_innisfree.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1710_innisfree.jpg" alt="innisfree" class="img-fluid rounded border">
-                </a>
-                    <p><a href="https://a2.vpon.com/img/campaigns/201711_innisfree/index.html" target="_blank">innisfree 聖誕節活動宣傳</a></p>
-                </div>
+    <!-- Header (保持不變) -->
+    <header class="py-16 px-4 text-center bg-white border-b border-gray-100">
+        <div class="max-w-3xl mx-auto flex flex-col items-center">
+            <div class="w-32 h-32 rounded-full overflow-hidden shadow-lg mb-6 border-4 border-gray-50">
+                <img src="./images/1531274608490.jpg" alt="Tsai Chin Lin" class="w-full h-full object-cover">
             </div>
-            <div class="row">
-               <div class="col-lg-4 p-2">
-                <a href="images/1711.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1711.jpg" alt="Biore集光計畫" class="img-fluid rounded border">
-                </a>
-                    <p><a href="https://tw-img.vpon.com/img/campaigns/201712_Biore/" target="_blank">Biore集光計畫活動宣傳</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1804.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1804.jpg" alt="Onetouch血糖機" class="img-fluid rounded border">
-                </a>
-                    <p><a href="https://a2.vpon.com/img/campaigns/201804_onetouch/index.html" target="_blank">Onetouch血糖機母親節活動宣傳</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1805.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1805.jpg" alt="可樂果" class="img-fluid rounded border">
-                </a>
-                    <p><a href="https://tw-img.vpon.com/img/campaigns/201806_lianhwa/" target="_blank">可樂果世足賽活動宣傳</a></p>
-               </div>
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">Tsai Chin Lin</h1>
+            <div class="text-gray-500 text-sm md:text-base space-y-1 mb-6">
+                <p>畢業於 景文科技大學 視覺傳達設計系 (副學士)</p>
+                <p>曾任職於 Vpon 威朋大數據集團，擔任資深視覺設計師</p>
             </div>
-            <div class="row">
-               <div class="col-lg-4 p-2">
-                <a href="images/1809.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1809.jpg" alt="桂格燕麥飲" class="img-fluid rounded border">
-                </a>
-                    <p><a href="https://vpon-demo.vpon.com/campaigns/201809_sfworldwide/web/index.html" target="_blank">桂格燕麥飲活動宣傳</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1811_01.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1811_01.jpg" alt="八方雲集" class="img-fluid rounded border">
-                </a>
-                <p><a href="https://8way2018winter.vpon.com/index.html?_t=1&utm_source=QRCode&utm_medium=link1&utm_campaign=QRCode_link1&vpadn_src=QRCode_link1" target="_blank">八方雲集活動宣傳</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1811_02.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1811_02.jpg" alt="飛柔X幾米媒體宣傳" class="img-fluid rounded border">
-                </a>
-                <p><a href="https://tw-img.vpon.com/img/campaigns/201812_pert/index.html" target="_blank">飛柔X幾米活動宣傳</a></p>
-                </div>
-            </div>
-            <div class="row">
-               <div class="col-lg-4 p-2">
-                <a href="images/1908.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1908.jpg" alt="甦密" class="img-fluid rounded border">
-                </a>
-                    <p><a href="https://a2.vpon.com/img/campaigns/201908_LG_sum37/index.html" target="_blank">甦密活動宣傳</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                <a href="images/1909.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1909.jpg" alt="台灣三菱電機走天下活動宣傳" class="img-fluid rounded border">
-                </a>
-                <p><a href="https://a2.vpon.com/img/campaigns/201910_mitsubishi/test/index.html" target="_blank">台灣三菱電機走天下活動宣傳</a></p>
-                </div>
-               <div class="col-lg-4 p-2">
-                   <a href="images/1912.jpg" data-toggle="lightbox" data-gallery="gallery">
-                    <img src="images/1912.jpg" alt="八幡平" class="img-fluid rounded border">
-                   </a>
-                   <p><a href="https://tw-img.vpon.com/img/campaigns/202001_JP_Hachimantai/index.html" target="_blank">日本八幡平滑雪旅遊活動宣傳</a></p>
-                </div>
+            <div class="flex flex-wrap justify-center gap-2 mb-8">
+                <div class="soft-icon bg-ps">Ps</div>
+                <div class="soft-icon bg-ai">Ai</div>
+                <div class="soft-icon bg-an">An</div>
+                <div class="soft-icon bg-css"><i class="fa-brands fa-css3"></i></div>
+                <div class="soft-icon bg-html"><i class="fa-brands fa-html5"></i></div>
+                <div class="soft-icon bg-bs">B</div>
             </div>
         </div>
-    </section>
-    <section class="p-5">
-        <div class="container-fluid p-5 text-center" id="video">
-            <h2>Interstitial Ads 創意互動影片展示</h2>
-            <div class="row mt-5">
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b01.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a01.mp4" type="video/mp4" />
-                  </video>
-                  <h6>統一布丁新春包裝宣傳</h6>
-                  <p>User雙手搖晃手機，抽出吉祥話</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b02.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a02.mp4" type="video/mp4" />
-                  </video>
-                  <h6>STEAM 活動宣傳</h6>
-                  <p>移動圖騰解鎖，展示新發售的禮品卡</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b03.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a03.mp4" type="video/mp4" />
-                  </video>
-                  <h6>NIKE 任我去跑</h6>
-                  <p>左右拖曳觀看React超強彈力的透視圖</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b04.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a04.mp4" type="video/mp4" />
-                  </video>
-                  <h6>茶裏王換新裝活動宣傳</h6>
-                  <p>搖晃手機觸發茶裏王華麗轉身換新裝</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b05.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a05.mp4" type="video/mp4" />
-                  </video>
-                  <h6>肯德基黑糖蛋撻</h6>
-                  <p>露出一角的黑糖蛋撻，帶出肯德基最新雙色好時光優惠</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b06.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a06.mp4" type="video/mp4" />
-                  </video>
-                  <h6>多多寶可夢限量包裝</h6>
-                  <p>操作夾娃娃機夾取一瓶多多，帶出本次全新限量包裝上市訊息</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b07.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a07.mp4" type="video/mp4" />
-                  </video>
-                  <h6>香港荷里活廣場春日祭</h6>
-                  <p>點亮金魚燈籠，照出春日祭訊息</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b08.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a08.mp4" type="video/mp4" />
-                  </video>
-                  <h6>TOYOTA 精彩十月</h6>
-                  <p>精彩十月，展示多彩的車款</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b09.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a09.mp4" type="video/mp4" />
-                  </video>
-                  <h6>道地 纖。解茶</h6>
-                  <p>大魚大肉!? 纖。解茶 有助阻糖阻脂</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b10.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a10.mp4" type="video/mp4" />
-                  </video>
-                  <h6>黑松 FIN 活動宣傳</h6>
-                  <p>季節變化? 喝水不夠 喝FIN就好</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b11.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a11.mp4" type="video/mp4" />
-                  </video>
-                  <h6>黑松 FIN 活動宣傳</h6>
-                  <p>氣溫過高? 喝水不夠 喝FIN就好</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b12.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a12.mp4" type="video/mp4" />
-                  </video>
-                  <h6>黑松 FIN 活動宣傳</h6>
-                  <p>運動時，喝水不夠 喝FIN就好</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b13.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a13.mp4" type="video/mp4" />
-                  </video>
-                  <h6>黑人牙膏亮白</h6>
-                  <p>點點牙齒，揭曉牙齒亮白的秘密</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b14.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a14.mp4" type="video/mp4" />
-                  </video>
-                  <h6>Nespresso 春季限量版膠囊</h6>
-                  <p>用時間軸來探索時光淬鍊的咖啡秘密</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b15.gif" data-setup='{"fluid": true}'>
-                    <source src="images/a15.mp4" type="video/mp4" />
-                  </video>
-                  <h6>玉山銀行行動 APP 宣傳</h6>
-                  <p>APP新進化 下載登入抽咖啡活動</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b16.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a16.mp4" type="video/mp4" />
-                  </video>
-                  <h6>NESPRESSO 全新概念店宣傳</h6>
-                  <p>轉動膠囊轉盤選一個的口味，邀您至全新Pop-Up概念店</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b17.jpg" data-setup='{"fluid": true}'>
-                    <source src="images/a17.mp4" type="video/mp4" />
-                  </video>
-                  <h6>安佳純牛奶球宣傳</h6>
-                  <p>請User傾斜手機替黑咖啡加入牛奶，強調安佳純牛奶球非奶精</p>
-               </div>
-               <div class="col-md-2 col-sm-6 p-1 mb-2"> 
-                  <video id="my-video" class="video-js vjs-big-play-centered vjs-default-skin mb-3" controls preload="auto" width="536" height="796" poster="images/b18.png" data-setup='{"fluid": true}'>
-                    <source src="images/a18.mp4" type="video/mp4" />
-                  </video>
-                  <h6>萊爾富 x Lazy MARU 活動宣傳</h6>
-                  <p>透過搖晃手機的小遊戲，時間到後出現Lazy Maru集點活動訊息</p>
-               </div>
+    </header>
+
+    <!-- Work Experience Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-12 tracking-wider">工作經歷 / Work Experience</h2>
+            
+            <div class="space-y-10">
+                <!-- Job 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2011/10 ~ 2025/11</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">威朋大數據集團</h3>
+                        <p class="text-gray-700 font-medium mb-1">資深視覺設計師</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">行動媒體與廣告創意設計製作，能有效與內部程式人員溝通協調。</p>
+                    </div>
+                </div>
+
+                <!-- Job 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2010/03 ~ 2011/10</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">依斯楚互動娛樂股份有限公司</h3>
+                        <p class="text-gray-700 font-medium mb-1">資深網頁設計師</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">負責網頁設計，包含遊戲官網、廣告 Banner 設計以及活動相關視覺。</p>
+                    </div>
+                </div>
+
+                <!-- Job 3 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2009/04 ~ 2010/03</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">口袋移動科技股份有限公司</h3>
+                        <p class="text-gray-700 font-medium mb-1">資深網頁設計師</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">活動網頁製作、手機電子書、廣告 Banner 設計製作。</p>
+                    </div>
+                </div>
+
+                <!-- Job 4 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2008/04 ~ 2008/11</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">友信網路股份有限公司</h3>
+                        <p class="text-gray-700 font-medium mb-1">資深網頁設計師</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">負責活動網頁、廣告 Banner 設計製作。</p>
+                    </div>
+                </div>
+                
+                <!-- Job 5 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2006/12 ~ 2008/04</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">隨身遊戲股份有限公司</h3>
+                        <p class="text-gray-700 font-medium mb-1">網頁設計師</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">手機鈴聲下載相關活動網頁、廣告 Banner 設計製作。</p>
+                    </div>
+                </div>
+
+                <!-- Job 6 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2003/03 ~ 2006/12</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">摩利在線股份有限公司</h3>
+                        <p class="text-gray-700 font-medium mb-1">網頁設計師</p>
+                        <p class="text-gray-500 text-sm leading-relaxed">活動網頁製作、AVATAR 物件點陣圖繪製。</p>
+                    </div>
+                </div>
+
+                <!-- Job 7 -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div class="md:col-span-3 text-gray-500 font-medium md:text-right pt-1">2002/08 ~ 1998/09</div>
+                    <div class="md:col-span-9">
+                        <h3 class="text-lg font-bold text-gray-800">宏廣股份有限公司</h3>
+                        <p class="text-gray-700 font-medium mb-1">動畫師</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-    <section class="bg-light p-5">
-        <div class="container p-1 text-center">
-            <h5>感謝您的閱讀，歡迎與我聯絡</h5>
-            <h5><a href="mailto:ccsaracc@gmail.com">ccsaracc@gmail.com</a></h5>
-        </div>
-    </section>
-    <section class="bg-secondary">
-        <div class="container p-1 text-center">
-            <p class="text-white pt-3">©2020 by Tsai Chin Lin.</p>
         </div>
     </section>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="/js/bs4_vendor.js"></script>
-<script src="/js/bs4_all.js"></script>
-<script src="/js/wow.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
-<script src="https://vjs.zencdn.net/7.6.6/video.js"></script>
-<script>
-$(document).on("click", '[data-toggle="lightbox"]', function(event) {
-  event.preventDefault();
-  $(this).ekkoLightbox();
-});
-</script>
+    <!-- Portfolio Section -->
+    <section class="py-16 bg-white" id="portfolio">
+        <div class="container mx-auto px-4 max-w-7xl">
+            
+            <div class="text-center mb-10">
+                <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6 tracking-wider">精選作品 / Portfolio</h2>
+                
+                <div class="flex justify-center flex-wrap gap-2 md:gap-4" id="portfolio-filters">
+                    <button class="filter-btn px-6 py-2 rounded-full border border-gray-800 bg-gray-800 text-white text-sm md:text-base font-medium transition-all" data-filter="all">全部顯示</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 text-gray-600 text-sm md:text-base font-medium transition-all hover:bg-gray-800 hover:text-white hover:border-transparent" data-filter="web">Web</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 text-gray-600 text-sm md:text-base font-medium transition-all hover:bg-gray-800 hover:text-white hover:border-transparent" data-filter="banner">Banner</button>
+                    <button class="filter-btn px-6 py-2 rounded-full border border-gray-300 text-gray-600 text-sm md:text-base font-medium transition-all hover:bg-gray-800 hover:text-white hover:border-transparent" data-filter="mobile">Interstitial Ads</button>
+                </div>
+            </div>
+
+            <!-- Masonry Grid -->
+            <div class="masonry-grid" id="portfolio-grid">
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_01.jpg"  
+                         alt="新潟・越後湯澤" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">新潟・越後湯澤</h3>
+                            <a href="https://tw-img.vpon.com/img/campaigns/yuzawa-ishiuchi_summer/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_02.jpg"  
+                         alt="藏壽司 來京都旅遊一定要搶的超值優惠" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">藏壽司 來京都旅遊一定要搶的超值優惠</h3>
+                            <a href="https://creative-demo.vpon.com/img/vd_demo/24/10_kurasushi/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_03.jpg"  
+                         alt="Tangram飯店 斑尾東急度假村" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">Tangram飯店 斑尾東急度假村</h3>
+                            <a href="https://creative-demo.vpon.com/img/vd_demo/25/10_tangram/" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_04.jpg"  
+                         alt="AEON 永旺夢樂城" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">AEON 永旺夢樂城 優惠券推廣</h3>
+                            <a href="https://tw-img.vpon.com/img/campaigns/aeon/aeon_2025campaign_tc/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_05.jpg"  
+                         alt="FULALI KYOBASHI 外國旅客專屬優惠券" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">FULALI KYOBASHI 外國旅客專屬優惠券</h3>
+                            <a href="https://creative-demo.vpon.com/img/vd_demo/23/12_fulali_kyobashi/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_06.jpg"  
+                         alt="可樂果新年活動" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">可樂果新年活動</h3>
+                            <a href="https://a2.vpon.com/img/campaigns/KolokoTest/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 1：網頁設計 (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="web">
+                    <img src="./images/web_07.jpg"  
+                         alt="三菱電機走天下" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-indigo-600 rounded">Web Design</span>
+                            <h3 class="text-lg font-bold mb-1">三菱電機走天下</h3>
+                            <a href="https://tw-img.vpon.com/img/campaigns/201910_mitsubishi/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 3：Banner (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="banner">
+                    <img src="./images/b_01.jpg" 
+                         alt="活動 Banner" class="w-full h-auto object-cover block cursor-zoom-in"
+                         onclick="openLightbox(this.src, '唐吉訶德95折優惠')">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white pointer-events-none">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-yellow-600 rounded">Banner</span>
+                            <h3 class="text-lg font-bold mb-1">唐吉訶德95折優惠</h3>
+                            <div class="mt-3 text-xs text-gray-400"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> 點擊查看大圖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 3：Banner (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="banner">
+                    <img src="./images/b_02.jpg" 
+                         alt="活動 Banner" class="w-full h-auto object-cover block cursor-zoom-in"
+                         onclick="openLightbox(this.src, 'AEON 外國旅客專屬優惠券')">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white pointer-events-none">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-yellow-600 rounded">Banner</span>
+                            <h3 class="text-lg font-bold mb-1">AEON 外國旅客專屬優惠券</h3>
+                            <div class="mt-3 text-xs text-gray-400"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> 點擊查看大圖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 3：Banner (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="banner">
+                    <img src="./images/b_03.jpg" 
+                         alt="活動 Banner" class="w-full h-auto object-cover block cursor-zoom-in"
+                         onclick="openLightbox(this.src, '日本旅遊觀光推廣')">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white pointer-events-none">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-yellow-600 rounded">Banner</span>
+                            <h3 class="text-lg font-bold mb-1">日本旅遊觀光推廣</h3>
+                            <div class="mt-3 text-xs text-gray-400"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> 點擊查看大圖</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 2：video -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="mobile">
+                    <img src="./images/IS_01.jpg" 
+                         alt="DAIKIN 全新risora系列" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-pink-600 rounded">Interstitial Ads</span>
+                            <h3 class="text-lg font-bold mb-1">DAIKIN 全新risora系列</h3>
+                            <a href="https://creative-demo.vpon.com/img/vd_demo/24/03_daikin/index.html" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 2：video -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="mobile">
+                    <img src="./images/IS_02.png" 
+                         alt="tonies 聽得見的小盒子" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-pink-600 rounded">Interstitial Ads</span>
+                            <h3 class="text-lg font-bold mb-1">tonies 聽得見的小盒子</h3>
+                            <a href="https://tm.vpon.com/p/e/22/09_Tonies/" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 2：video -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="mobile">
+                    <img src="./images/IS_03.jpg" 
+                         alt="自殺突擊隊" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-pink-600 rounded">Interstitial Ads</span>
+                            <h3 class="text-lg font-bold mb-1">自殺突擊隊</h3>
+                            <a href="https://tm.vpon.com/p/e/21/07_tss/" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 2：video -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="mobile">
+                    <img src="./images/IS_04.jpg" 
+                         alt="統一布丁" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-pink-600 rounded">Interstitial Ads</span>
+                            <h3 class="text-lg font-bold mb-1">統一布丁</h3>
+                            <a href="https://tm.vpon.com/p/e/19/01_pecos/" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 2：video -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="mobile">
+                    <img src="./images/IS_05.jpg" 
+                         alt="統一布丁" class="w-full h-auto object-cover block">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-pink-600 rounded">Interstitial Ads</span>
+                            <h3 class="text-lg font-bold mb-1">統一布丁</h3>
+                            <a href="https://tm.vpon.com/p/e/19/12_pudding/" target="_blank" class="inline-flex items-center text-sm font-bold text-white border border-white px-4 py-2 rounded hover:bg-white hover:text-black transition-colors mt-2">
+                                前往網站 <i class="fa-solid fa-arrow-up-right-from-square ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 類型 3：Banner (Image Card) -->
+                <div class="masonry-item image-card relative group rounded-xl overflow-hidden shadow-lg bg-white" data-category="banner">
+                    <img src="./images/b_04.jpg" 
+                         alt="活動 Banner" class="w-full h-auto object-cover block cursor-zoom-in"
+                         onclick="openLightbox(this.src, '冬季度假滑雪場')">
+                    <div class="card-overlay absolute inset-0 flex flex-col justify-end p-6 text-white pointer-events-none">
+                        <div class="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                            <span class="inline-block px-2 py-1 mb-2 text-xs font-bold bg-yellow-600 rounded">Banner</span>
+                            <h3 class="text-lg font-bold mb-1">冬季度假滑雪場</h3>
+                            <div class="mt-3 text-xs text-gray-400"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> 點擊查看大圖</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+        <p>&copy; 2025 Tsai Chin Lin. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95 hidden px-4" onclick="closeLightbox()">
+        <button class="absolute top-4 right-4 text-white text-4xl focus:outline-none hover:text-gray-300">&times;</button>
+        <div class="max-w-5xl max-h-screen overflow-y-auto p-2" onclick="event.stopPropagation()">
+            <img id="lightbox-img" src="" alt="Full View" class="w-full h-auto rounded shadow-2xl">
+            <h3 id="lightbox-caption" class="text-white text-center mt-4 text-xl font-bold"></h3>
+        </div>
+    </div>
+
+    <!-- JavaScript (核心功能更新) -->
+    <script>
+        // 1. 篩選功能 (Filter)
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const items = document.querySelectorAll('.masonry-item');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-gray-800', 'text-white', 'border-gray-800');
+                        b.classList.add('text-gray-600', 'border-gray-300');
+                    });
+                    btn.classList.remove('text-gray-600', 'border-gray-300');
+                    btn.classList.add('bg-gray-800', 'text-white', 'border-gray-800');
+
+                    const filter = btn.getAttribute('data-filter');
+                    items.forEach(item => {
+                        item.style.display = (filter === 'all' || item.getAttribute('data-category') === filter) ? 'block' : 'none';
+                    });
+                });
+            });
+
+            // 2. 影片互動邏輯 (Desktop Hover + Mobile Scroll)
+            const videos = document.querySelectorAll('.js-video-autoplay');
+            
+            // 判斷是否為手機/觸控裝置
+            const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0 || window.innerWidth < 1024;
+
+            if (isTouchDevice) {
+                // --- 手機版：使用 Intersection Observer 自動播放 ---
+                const observerOptions = {
+                    root: null,
+                    rootMargin: '0px',
+                    threshold: 0.5 // 當影片 50% 出現在畫面中時
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        const video = entry.target;
+                        const card = video.closest('.video-card');
+
+                        if (entry.isIntersecting) {
+                            video.play();
+                            // 加入 class 讓 CSS 知道現在正在播放，把遮罩隱藏
+                            if(card) card.classList.add('playing'); 
+                        } else {
+                            video.pause();
+                            if(card) card.classList.remove('playing');
+                        }
+                    });
+                }, observerOptions);
+
+                videos.forEach(video => {
+                    observer.observe(video);
+                });
+
+            } else {
+                // --- 電腦版：使用 Mouseover 播放 ---
+                videos.forEach(video => {
+                    const card = video.closest('.video-card');
+                    
+                    card.addEventListener('mouseenter', () => {
+                        video.play();
+                    });
+                    
+                    card.addEventListener('mouseleave', () => {
+                        video.pause();
+                        video.currentTime = 0; // 如果想要滑鼠移開後重置影片，可保留此行
+                    });
+                });
+            }
+        });
+
+        // 3. Lightbox 功能
+        function openLightbox(src, caption) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            const cap = document.getElementById('lightbox-caption');
+            img.src = src;
+            cap.innerText = caption;
+            lightbox.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    </script>
 </body>
 </html>
-  
