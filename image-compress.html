@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 學習成果｜圖片壓縮工具</title>
+  <meta name="description" content="一個給設計與行銷工作使用的瀏覽器端圖片壓縮工具，可批次壓縮圖片、調整輸出格式、品質與最大寬度。" />
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --text:#192033;
+      --muted:#697386;
+      --line:#e7eaf2;
+      --primary:#6c5ce7;
+      --primary-dark:#5140d8;
+      --primary-soft:#eeeafe;
+      --accent:#ff8a3d;
+      --success:#0b9f6a;
+      --danger:#e74c3c;
+      --shadow:0 18px 50px rgba(25,32,51,.10);
+      --radius:24px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","PingFang TC",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(108,92,231,.18), transparent 34rem),
+        radial-gradient(circle at top right, rgba(255,138,61,.15), transparent 28rem),
+        var(--bg);
+      line-height:1.65;
+    }
+    a{color:inherit}
+    .wrap{width:min(1120px, calc(100% - 32px)); margin:0 auto; padding:36px 0 56px;}
+    .topbar{display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:28px;}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.02em;}
+    .logo{width:42px; height:42px; border-radius:14px; display:grid; place-items:center; background:linear-gradient(135deg,var(--primary),#9b8cff); color:#fff; box-shadow:0 12px 24px rgba(108,92,231,.25);}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.75); border:1px solid var(--line); color:var(--muted); font-size:14px; backdrop-filter:blur(8px);}
+    .hero{display:grid; grid-template-columns:1.05fr .95fr; gap:24px; align-items:stretch;}
+    .hero-card,.panel,.note{background:rgba(255,255,255,.88); border:1px solid rgba(231,234,242,.9); border-radius:var(--radius); box-shadow:var(--shadow);}
+    .hero-card{padding:36px; position:relative; overflow:hidden;}
+    .hero-card:after{content:""; position:absolute; right:-80px; top:-80px; width:210px; height:210px; border-radius:50%; background:rgba(108,92,231,.12);}
+    .kicker{font-size:14px; color:var(--primary); font-weight:800; margin-bottom:12px;}
+    h1{font-size:clamp(34px,5vw,56px); line-height:1.05; margin:0 0 18px; letter-spacing:-.04em;}
+    .lead{font-size:18px; color:#3f4859; margin:0 0 24px; max-width:650px;}
+    .features{display:flex; flex-wrap:wrap; gap:10px; margin:24px 0 0; padding:0; list-style:none;}
+    .features li{padding:9px 12px; border-radius:999px; background:var(--primary-soft); color:#4434b8; font-weight:700; font-size:14px;}
+    .summary{padding:28px; display:grid; gap:16px;}
+    .summary h2,.panel h2,.note h2{margin:0; font-size:22px;}
+    .summary p{margin:0; color:var(--muted);}
+    .metric{display:grid; grid-template-columns:44px 1fr; gap:12px; align-items:start; padding:14px; border-radius:18px; background:#fff; border:1px solid var(--line);}
+    .metric i{width:44px; height:44px; border-radius:14px; display:grid; place-items:center; background:#fff3eb; color:var(--accent); font-style:normal; font-weight:900;}
+    .main{display:grid; grid-template-columns:340px 1fr; gap:24px; margin-top:24px;}
+    .panel{padding:24px;}
+    .control{margin-top:20px;}
+    .control label{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-weight:800;}
+    .hint{font-size:13px; color:var(--muted); font-weight:600;}
+    .seg{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+    .seg button,.size-grid button,.btn{appearance:none; border:0; cursor:pointer; font:inherit;}
+    .seg button,.size-grid button{padding:10px 12px; border-radius:14px; background:#fff; border:1px solid var(--line); color:#566075; font-weight:800; transition:.18s;}
+    .seg button.active,.size-grid button.active{background:var(--primary); color:#fff; border-color:var(--primary); box-shadow:0 10px 24px rgba(108,92,231,.22);}
+    .range-row{display:flex; align-items:center; gap:12px;}
+    input[type="range"]{width:100%; accent-color:var(--primary);}
+    .quality-number{min-width:52px; text-align:right; font-weight:900; color:var(--primary);}
+    .size-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:8px;}
+    .dropzone{margin-top:0; min-height:330px; border:2px dashed #cfd5e6; border-radius:var(--radius); background:rgba(255,255,255,.70); display:grid; place-items:center; text-align:center; padding:28px; transition:.2s; position:relative; overflow:hidden;}
+    .dropzone.dragover{border-color:var(--primary); background:var(--primary-soft); transform:translateY(-2px);}
+    .dropzone input{position:absolute; inset:0; opacity:0; cursor:pointer;}
+    .upload-icon{font-size:48px; margin-bottom:12px;}
+    .dropzone strong{font-size:23px; display:block; margin-bottom:8px;}
+    .dropzone span{color:var(--muted);}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px; border-radius:15px; font-weight:900; background:#fff; border:1px solid var(--line); color:#333d52; text-decoration:none;}
+    .btn.primary{background:var(--primary); color:#fff; border-color:var(--primary); box-shadow:0 12px 25px rgba(108,92,231,.22);}
+    .btn.primary:hover{background:var(--primary-dark)}
+    .btn.danger{color:var(--danger)}
+    .result-head{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:24px;}
+    .result-head h2{margin:0; font-size:22px;}
+    .stats{color:var(--muted); font-size:14px;}
+    .list{display:grid; gap:12px; margin-top:16px;}
+    .item{display:grid; grid-template-columns:78px 1fr auto; gap:14px; align-items:center; padding:12px; border-radius:20px; background:#fff; border:1px solid var(--line);}
+    .thumb{width:78px; height:78px; border-radius:16px; object-fit:cover; background:#f0f2f7; border:1px solid var(--line);}
+    .item h3{margin:0 0 4px; font-size:15px; line-height:1.35; word-break:break-all;}
+    .meta{font-size:13px; color:var(--muted); display:flex; flex-wrap:wrap; gap:8px 12px;}
+    .saving{font-weight:900; color:var(--success);}
+    .empty{padding:22px; border-radius:20px; background:#fff; border:1px dashed #d9deeb; color:var(--muted); text-align:center;}
+    .note{margin-top:24px; padding:26px;}
+    .note-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:16px;}
+    .note-card{padding:16px; border:1px solid var(--line); border-radius:18px; background:#fff;}
+    .note-card h3{margin:0 0 6px; font-size:16px;}
+    .note-card p{margin:0; color:var(--muted); font-size:14px;}
+    footer{margin-top:28px; color:var(--muted); text-align:center; font-size:13px;}
+    @media (max-width:900px){.hero,.main{grid-template-columns:1fr}.main{gap:18px}.summary{order:2}.note-grid{grid-template-columns:1fr}.item{grid-template-columns:64px 1fr}.thumb{width:64px;height:64px}.item .btn{grid-column:1/-1}.topbar{align-items:flex-start; flex-direction:column}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand"><div class="logo">IMG</div><span>AI 學習成果作品</span></div>
+      <div class="badge">瀏覽器端處理 · 不上傳雲端 · 適合活動頁素材</div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-card">
+        <div class="kicker">工具實作 / Image Compress Tool</div>
+        <h1>圖片壓縮工具</h1>
+        <p class="lead">拖曳圖片進來，即可批次壓縮成適合網頁使用的格式與尺寸。工具使用 Canvas 在瀏覽器端重新編碼，檔案不會離開使用者的電腦。</p>
+        <ul class="features">
+          <li>批次壓縮</li>
+          <li>JPEG / WebP / PNG</li>
+          <li>品質調整</li>
+          <li>最大寬度設定</li>
+          <li>壓縮前後比較</li>
+        </ul>
+      </div>
+      <aside class="summary hero-card">
+        <h2>作品說明</h2>
+        <div class="metric"><i>1</i><p><strong>工作情境：</strong>活動頁、商品圖、Banner 上線前，常需要將圖片壓到較小檔案，降低網頁載入時間。</p></div>
+        <div class="metric"><i>2</i><p><strong>AI 輔助：</strong>透過 AI 協助規劃介面流程、撰寫 HTML/CSS/JavaScript 原型，再依實際工作需求調整。</p></div>
+        <div class="metric"><i>3</i><p><strong>保密考量：</strong>圖片在本機瀏覽器處理，不需上傳外部網站，較符合公司素材保密原則。</p></div>
+      </aside>
+    </section>
+
+    <main class="main">
+      <aside class="panel">
+        <h2>壓縮設定</h2>
+        <div class="control">
+          <label>輸出格式 <span class="hint">推薦 WebP</span></label>
+          <div class="seg" id="formatGroup">
+            <button class="active" data-format="image/webp">WebP</button>
+            <button data-format="image/jpeg">JPEG</button>
+            <button data-format="image/png">PNG</button>
+          </div>
+        </div>
+        <div class="control">
+          <label>品質 <span class="hint">JPEG / WebP 有效</span></label>
+          <div class="range-row">
+            <input id="quality" type="range" min="40" max="100" value="80" />
+            <span class="quality-number" id="qualityText">80%</span>
+          </div>
+        </div>
+        <div class="control">
+          <label>最大寬度 <span class="hint">等比例縮放</span></label>
+          <div class="size-grid" id="widthGroup">
+            <button class="active" data-width="0">原始</button>
+            <button data-width="2048">2048px</button>
+            <button data-width="1600">1600px</button>
+            <button data-width="1200">1200px</button>
+            <button data-width="800">800px</button>
+            <button data-width="640">640px</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn danger" id="clearBtn">清空結果</button>
+        </div>
+      </aside>
+
+      <section>
+        <div class="dropzone" id="dropzone">
+          <input id="fileInput" type="file" accept="image/*" multiple />
+          <div>
+            <div class="upload-icon">📁</div>
+            <strong>把圖片拖進來，或點擊選檔</strong>
+            <span>支援 JPG / PNG / WebP / GIF。GIF 會以第一幀重新輸出。</span>
+          </div>
+        </div>
+        <div class="result-head">
+          <h2>壓縮結果</h2>
+          <div class="stats" id="stats">尚未選擇圖片</div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="downloadAllBtn">全部下載</button>
+        </div>
+        <div class="list" id="resultList">
+          <div class="empty">選擇圖片後，這裡會顯示原始大小、壓縮後大小與節省比例。</div>
+        </div>
+      </section>
+    </main>
+
+    <footer>© 2026 AI Learning Project · Image Compress Tool</footer>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const dropzone = document.getElementById('dropzone');
+    const resultList = document.getElementById('resultList');
+    const stats = document.getElementById('stats');
+    const quality = document.getElementById('quality');
+    const qualityText = document.getElementById('qualityText');
+    const clearBtn = document.getElementById('clearBtn');
+    const downloadAllBtn = document.getElementById('downloadAllBtn');
+    const formatGroup = document.getElementById('formatGroup');
+    const widthGroup = document.getElementById('widthGroup');
+
+    let outputFormat = 'image/webp';
+    let maxWidth = 0;
+    let results = [];
+
+    quality.addEventListener('input', () => qualityText.textContent = quality.value + '%');
+
+    formatGroup.addEventListener('click', (e) => {
+      if (!e.target.dataset.format) return;
+      outputFormat = e.target.dataset.format;
+      [...formatGroup.children].forEach(btn => btn.classList.toggle('active', btn === e.target));
+    });
+
+    widthGroup.addEventListener('click', (e) => {
+      if (!e.target.dataset.width) return;
+      maxWidth = Number(e.target.dataset.width);
+      [...widthGroup.children].forEach(btn => btn.classList.toggle('active', btn === e.target));
+    });
+
+    ['dragenter','dragover'].forEach(type => {
+      dropzone.addEventListener(type, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
+    });
+    ['dragleave','drop'].forEach(type => {
+      dropzone.addEventListener(type, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
+    });
+    dropzone.addEventListener('drop', (e) => handleFiles(e.dataTransfer.files));
+    fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+    clearBtn.addEventListener('click', clearResults);
+    downloadAllBtn.addEventListener('click', downloadAll);
+
+    async function handleFiles(fileList){
+      const files = [...fileList].filter(file => file.type.startsWith('image/'));
+      if (!files.length) return;
+      if (results.length === 0) resultList.innerHTML = '';
+      for (const file of files){
+        try{
+          const compressed = await compressImage(file);
+          results.push(compressed);
+          renderItem(compressed);
+          updateStats();
+        }catch(err){
+          console.error(err);
+          alert(file.name + ' 處理失敗，請換一張圖片試試看。');
+        }
+      }
+      fileInput.value = '';
+    }
+
+    function compressImage(file){
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const src = URL.createObjectURL(file);
+        img.onload = () => {
+          const ratio = maxWidth && img.width > maxWidth ? maxWidth / img.width : 1;
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * ratio);
+          canvas.height = Math.round(img.height * ratio);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const mime = outputFormat;
+          const q = Number(quality.value) / 100;
+          canvas.toBlob((blob) => {
+            URL.revokeObjectURL(src);
+            if (!blob) return reject(new Error('Canvas export failed'));
+            const ext = mime.split('/')[1].replace('jpeg','jpg');
+            const baseName = file.name.replace(/\.[^.]+$/, '');
+            const newName = `${baseName}-compressed.${ext}`;
+            const saving = file.size ? Math.round((1 - blob.size / file.size) * 100) : 0;
+            resolve({
+              id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()),
+              originalName: file.name,
+              name: newName,
+              originalSize: file.size,
+              newSize: blob.size,
+              saving,
+              width: canvas.width,
+              height: canvas.height,
+              blob,
+              url: URL.createObjectURL(blob),
+              preview: canvas.toDataURL('image/jpeg', .72)
+            });
+          }, mime, mime === 'image/png' ? undefined : q);
+        };
+        img.onerror = () => reject(new Error('Image load failed'));
+        img.src = src;
+      });
+    }
+
+    function renderItem(item){
+      const div = document.createElement('div');
+      div.className = 'item';
+      div.innerHTML = `
+        <img class="thumb" src="${item.preview}" alt="${escapeHtml(item.originalName)} 預覽">
+        <div>
+          <h3>${escapeHtml(item.originalName)}</h3>
+          <div class="meta">
+            <span>原始 ${formatBytes(item.originalSize)}</span>
+            <span>壓縮後 ${formatBytes(item.newSize)}</span>
+            <span>${item.width} × ${item.height}px</span>
+            <span class="saving">${item.saving >= 0 ? '節省 ' + item.saving + '%' : '增加 ' + Math.abs(item.saving) + '%'}</span>
+          </div>
+        </div>
+        <a class="btn primary" href="${item.url}" download="${escapeHtml(item.name)}">下載</a>
+      `;
+      resultList.prepend(div);
+    }
+
+    function updateStats(){
+      const original = results.reduce((sum, item) => sum + item.originalSize, 0);
+      const compressed = results.reduce((sum, item) => sum + item.newSize, 0);
+      const saving = original ? Math.round((1 - compressed / original) * 100) : 0;
+      stats.textContent = `${results.length} 張圖片｜${formatBytes(original)} → ${formatBytes(compressed)}｜總節省 ${saving}%`;
+    }
+
+    function clearResults(){
+      results.forEach(item => URL.revokeObjectURL(item.url));
+      results = [];
+      resultList.innerHTML = '<div class="empty">選擇圖片後，這裡會顯示原始大小、壓縮後大小與節省比例。</div>';
+      stats.textContent = '尚未選擇圖片';
+    }
+
+    function downloadAll(){
+      if (!results.length) return alert('尚未有可下載的壓縮結果。');
+      results.forEach((item, index) => {
+        setTimeout(() => {
+          const a = document.createElement('a');
+          a.href = item.url;
+          a.download = item.name;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, index * 250);
+      });
+    }
+
+    function formatBytes(bytes){
+      if (bytes === 0) return '0 B';
+      const units = ['B','KB','MB','GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(1024));
+      return `${(bytes / Math.pow(1024, i)).toFixed(i === 0 ? 0 : 1)} ${units[i]}`;
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>圖片裁切與改尺寸工具</title>
+  <style>
+    :root{
+      --bg:#f6f8ff;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#dbe3f0;
+      --main:#4f46e5;
+      --main-2:#7c3aed;
+      --soft:#eef2ff;
+      --ok:#059669;
+      --warn:#f59e0b;
+      --radius:24px;
+      --shadow:0 18px 40px rgba(31,41,55,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(124,58,237,.16), transparent 32%),
+        radial-gradient(circle at 88% 12%, rgba(79,70,229,.18), transparent 30%),
+        linear-gradient(180deg,#fbfcff 0%,var(--bg) 100%);
+      min-height:100vh;
+    }
+    .wrap{width:min(1120px,calc(100% - 32px));margin:auto;padding:36px 0 48px}
+    .hero{display:grid;grid-template-columns:1.08fr .92fr;gap:24px;align-items:stretch;margin-bottom:24px}
+    .panel,.tool-card{background:rgba(255,255,255,.9);border:1px solid rgba(219,227,240,.9);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .panel{padding:34px;position:relative;overflow:hidden}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--soft);color:var(--main);font-weight:800;font-size:13px}
+    h1{margin:18px 0 12px;font-size:clamp(30px,5vw,54px);line-height:1.05;letter-spacing:-.04em}
+    .lead{font-size:17px;line-height:1.8;color:var(--muted);margin:0;max-width:680px}
+    .feature-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:26px}
+    .feature{padding:14px;border-radius:18px;background:#fff;border:1px solid var(--line);font-weight:700;color:#374151}
+    .feature span{display:block;margin-top:4px;font-size:13px;font-weight:500;color:var(--muted);line-height:1.5}
+    .side-note{padding:28px;display:flex;flex-direction:column;justify-content:space-between;gap:20px}
+    .note-title{font-weight:900;font-size:22px;margin:0 0 8px}.note-text{margin:0;color:var(--muted);line-height:1.75}.mini{font-size:13px;color:var(--muted);line-height:1.7;border-top:1px solid var(--line);padding-top:16px}
+    .tool-card{padding:24px}.toolbar{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}.control-box{border:1px solid var(--line);border-radius:20px;padding:16px;background:#fff}.control-title{margin:0 0 12px;font-weight:900;font-size:15px}.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.btn,.chip,select,input[type="number"]{border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;font:inherit;font-size:14px}.btn,.chip{cursor:pointer;font-weight:800}.btn:hover,.chip:hover{border-color:var(--main);color:var(--main)}.chip.active{background:var(--main);border-color:var(--main);color:#fff}.primary{border:0;background:linear-gradient(135deg,var(--main),var(--main-2));color:#fff;padding:12px 18px}.primary:hover{color:#fff;filter:brightness(1.04)}.secondary{background:#f9fafb}select{min-width:180px}input[type="number"]{width:132px}.upload{border:2px dashed #c7d2fe;border-radius:24px;background:linear-gradient(180deg,#fff,#f8faff);padding:32px;text-align:center;cursor:pointer;margin-bottom:18px}.upload.drag{background:#eef2ff;border-color:var(--main)}.upload strong{display:block;font-size:22px;margin-bottom:8px}.upload p{margin:0;color:var(--muted);line-height:1.6}.workspace{display:none;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:20px;align-items:start}.canvas-wrap{background:#111827;border-radius:24px;padding:16px;overflow:auto;min-height:420px;display:flex;align-items:center;justify-content:center}.stage{position:relative;display:inline-block;line-height:0;user-select:none}.stage img{max-width:min(100%,720px);max-height:620px;display:block}.shade{position:absolute;background:rgba(0,0,0,.48);pointer-events:none}.crop-box{position:absolute;border:2px solid #fff;box-shadow:0 0 0 1px rgba(79,70,229,.7),0 0 30px rgba(0,0,0,.5);cursor:move}.crop-box:before,.crop-box:after{content:"";position:absolute;background:rgba(255,255,255,.75)}.crop-box:before{left:33.33%;top:0;width:1px;height:100%;box-shadow:calc(var(--cw, 100px) / 3) 0 0 rgba(255,255,255,.75)}.crop-box:after{left:0;top:33.33%;height:1px;width:100%;box-shadow:0 calc(var(--ch, 100px) / 3) 0 rgba(255,255,255,.75)}.handle{position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid var(--main);right:-8px;bottom:-8px;cursor:nwse-resize}.result{border:1px solid var(--line);border-radius:24px;background:#fff;padding:18px}.preview{height:260px;border-radius:18px;background:#f3f4f6;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:14px}.preview img{max-width:100%;max-height:100%;display:block}.info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 16px}.stat{background:#f9fafb;border:1px solid var(--line);border-radius:16px;padding:12px}.stat b{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}.stat span{font-weight:900}.actions{display:flex;gap:10px;flex-wrap:wrap}.hidden{display:none!important}.hint{font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px}.quality-line{margin-top:12px}.quality-line input{width:180px}.footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    @media (max-width:860px){.hero,.workspace{grid-template-columns:1fr}.toolbar{grid-template-columns:1fr}.feature-list{grid-template-columns:1fr}.panel{padding:24px}.tool-card{padding:18px}.canvas-wrap{min-height:320px}.stage img{max-width:100%;max-height:460px}.preview{height:220px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="panel">
+        <span class="badge">AI 輔助作品｜設計師工具</span>
+        <h1>圖片裁切與改尺寸工具</h1>
+        <p class="lead">上傳圖片後，可自由裁切、鎖定常用比例，也可以快速套用社群版位尺寸。處理過程在瀏覽器端完成，適合活動頁、Banner、社群素材與商品圖快速整理。</p>
+        <div class="feature-list">
+          <div class="feature">比例裁切<span>支援自由、1:1、4:5、16:9 等常用比例。</span></div>
+          <div class="feature">社群尺寸<span>提供貼文、限動、Banner 等常見版位。</span></div>
+          <div class="feature">格式輸出<span>可輸出 JPEG、PNG、WebP。</span></div>
+          <div class="feature">本機處理<span>圖片不需上傳伺服器，降低素材外流疑慮。</span></div>
+        </div>
+      </div>
+      <div class="panel side-note">
+        <div>
+          <p class="note-title">使用情境</p>
+          <p class="note-text">設計師製作活動素材時，常需要把同一張主視覺快速裁成不同尺寸，例如方形貼文、直式限動、橫幅 Banner。此工具可減少重複開啟修圖軟體的時間。</p>
+        </div>
+        <div class="mini">建議流程：先上傳原圖 → 選擇比例或社群版位 → 調整裁切區 → 選擇輸出格式 → 下載成品。</div>
+      </div>
+    </section>
+
+    <section class="tool-card">
+      <div class="upload" id="uploadArea">
+        <strong>拖曳圖片到這裡，或點擊選檔</strong>
+        <p>支援 JPG / PNG / WebP / GIF。GIF 會以目前畫面輸出為靜態圖片。</p>
+        <input id="fileInput" class="hidden" type="file" accept="image/*">
+      </div>
+
+      <div class="toolbar">
+        <div class="control-box">
+          <p class="control-title">裁切比例</p>
+          <div class="row" id="ratioBtns">
+            <button class="chip active" data-ratio="free">自由</button>
+            <button class="chip" data-ratio="1">1:1</button>
+            <button class="chip" data-ratio="0.8">4:5</button>
+            <button class="chip" data-ratio="0.75">3:4</button>
+            <button class="chip" data-ratio="1.7777778">16:9</button>
+            <button class="chip" data-ratio="1.5">3:2</button>
+          </div>
+        </div>
+        <div class="control-box">
+          <p class="control-title">社群版位</p>
+          <div class="row">
+            <select id="presetSelect">
+              <option value="">— 選擇平台版位 —</option>
+              <option value="1080x1080">IG / FB 方形貼文 1080×1080</option>
+              <option value="1080x1350">IG 直式貼文 1080×1350</option>
+              <option value="1080x1920">限時動態 1080×1920</option>
+              <option value="1200x628">廣告橫圖 1200×628</option>
+              <option value="1200x300">網站 Banner 1200×300</option>
+              <option value="1920x1080">桌機 KV 1920×1080</option>
+            </select>
+          </div>
+        </div>
+        <div class="control-box">
+          <p class="control-title">輸出尺寸</p>
+          <div class="row">
+            <button class="chip active" id="sizeOriginal">裁切原寸</button>
+            <button class="chip" id="sizeCustom">指定寬度</button>
+            <input type="number" id="widthInput" min="100" step="10" value="1080" disabled> px
+          </div>
+          <div class="hint">指定寬度時，高度會依裁切比例自動換算。</div>
+        </div>
+        <div class="control-box">
+          <p class="control-title">輸出格式</p>
+          <div class="row" id="formatBtns">
+            <button class="chip active" data-format="image/jpeg">JPEG</button>
+            <button class="chip" data-format="image/png">PNG</button>
+            <button class="chip" data-format="image/webp">WebP</button>
+          </div>
+          <div class="quality-line">
+            品質 <input id="qualityInput" type="range" min="0.5" max="0.95" step="0.01" value="0.86"> <b id="qualityValue">86%</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="workspace" id="workspace">
+        <div class="canvas-wrap">
+          <div class="stage" id="stage">
+            <img id="sourceImg" alt="待裁切圖片">
+            <div class="shade" id="shadeTop"></div><div class="shade" id="shadeLeft"></div><div class="shade" id="shadeRight"></div><div class="shade" id="shadeBottom"></div>
+            <div class="crop-box" id="cropBox"><span class="handle" id="handle"></span></div>
+          </div>
+        </div>
+        <aside class="result">
+          <div class="preview" id="preview"><span class="hint">完成裁切後會在這裡預覽</span></div>
+          <div class="info">
+            <div class="stat"><b>裁切區域</b><span id="cropInfo">—</span></div>
+            <div class="stat"><b>輸出尺寸</b><span id="outputInfo">—</span></div>
+          </div>
+          <div class="actions">
+            <button class="btn primary" id="downloadBtn">下載圖片</button>
+            <button class="btn secondary" id="resetBtn">重設裁切</button>
+            <button class="btn secondary" id="changeBtn">更換圖片</button>
+          </div>
+          <p class="hint">提示：拖曳白色裁切框可移動範圍，拉右下角圓點可調整大小。</p>
+        </aside>
+      </div>
+    </section>
+
+    <p class="footer">圖片處理於本機瀏覽器執行，未建立後端上傳流程。</p>
+  </main>
+
+  <script>
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const workspace = document.getElementById('workspace');
+    const sourceImg = document.getElementById('sourceImg');
+    const stage = document.getElementById('stage');
+    const cropBox = document.getElementById('cropBox');
+    const handle = document.getElementById('handle');
+    const shades = ['shadeTop','shadeLeft','shadeRight','shadeBottom'].map(id=>document.getElementById(id));
+    const cropInfo = document.getElementById('cropInfo');
+    const outputInfo = document.getElementById('outputInfo');
+    const preview = document.getElementById('preview');
+    const presetSelect = document.getElementById('presetSelect');
+    const widthInput = document.getElementById('widthInput');
+    const qualityInput = document.getElementById('qualityInput');
+    const qualityValue = document.getElementById('qualityValue');
+    let imgNatural = {w:0,h:0};
+    let crop = {x:40,y:40,w:240,h:240};
+    let ratio = 'free';
+    let outputFormat = 'image/jpeg';
+    let customWidth = false;
+    let presetSize = null;
+    let dragMode = null;
+    let start = {};
+
+    uploadArea.addEventListener('click',()=>fileInput.click());
+    uploadArea.addEventListener('dragover',e=>{e.preventDefault();uploadArea.classList.add('drag')});
+    uploadArea.addEventListener('dragleave',()=>uploadArea.classList.remove('drag'));
+    uploadArea.addEventListener('drop',e=>{e.preventDefault();uploadArea.classList.remove('drag'); if(e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);});
+    fileInput.addEventListener('change',e=>{ if(e.target.files[0]) loadFile(e.target.files[0]); });
+
+    function loadFile(file){
+      if(!file.type.startsWith('image/')) return alert('請選擇圖片檔');
+      const reader = new FileReader();
+      reader.onload = e => { sourceImg.src = e.target.result; };
+      reader.readAsDataURL(file);
+    }
+    sourceImg.onload = () => {
+      imgNatural = {w:sourceImg.naturalWidth,h:sourceImg.naturalHeight};
+      uploadArea.style.display = 'none';
+      workspace.style.display = 'grid';
+      requestAnimationFrame(resetCrop);
+    };
+
+    function bounds(){return {w:sourceImg.clientWidth,h:sourceImg.clientHeight};}
+    function resetCrop(){
+      const b = bounds();
+      let w = b.w * .72, h = b.h * .72;
+      const r = getCurrentRatio();
+      if(r){
+        if(w / h > r){ w = h * r; } else { h = w / r; }
+      }
+      crop = {x:(b.w-w)/2,y:(b.h-h)/2,w,h};
+      clampCrop(); render();
+    }
+    function getCurrentRatio(){ return ratio === 'free' ? null : Number(ratio); }
+    function clampCrop(){
+      const b = bounds();
+      crop.w = Math.max(40, Math.min(crop.w, b.w));
+      crop.h = Math.max(40, Math.min(crop.h, b.h));
+      crop.x = Math.max(0, Math.min(crop.x, b.w - crop.w));
+      crop.y = Math.max(0, Math.min(crop.y, b.h - crop.h));
+    }
+    function render(){
+      cropBox.style.left = crop.x + 'px'; cropBox.style.top = crop.y + 'px';
+      cropBox.style.width = crop.w + 'px'; cropBox.style.height = crop.h + 'px';
+      cropBox.style.setProperty('--cw', crop.w + 'px'); cropBox.style.setProperty('--ch', crop.h + 'px');
+      const b = bounds();
+      shades[0].style.cssText = `left:0;top:0;width:${b.w}px;height:${crop.y}px`;
+      shades[1].style.cssText = `left:0;top:${crop.y}px;width:${crop.x}px;height:${crop.h}px`;
+      shades[2].style.cssText = `left:${crop.x+crop.w}px;top:${crop.y}px;width:${b.w-crop.x-crop.w}px;height:${crop.h}px`;
+      shades[3].style.cssText = `left:0;top:${crop.y+crop.h}px;width:${b.w}px;height:${b.h-crop.y-crop.h}px`;
+      updateInfo(); generatePreview(false);
+    }
+    function outputSize(){
+      const scale = imgNatural.w / bounds().w;
+      const srcW = Math.round(crop.w * scale), srcH = Math.round(crop.h * scale);
+      if(presetSize) return presetSize;
+      if(customWidth){
+        const w = Math.max(100, Number(widthInput.value)||srcW);
+        return {w, h:Math.round(w * srcH / srcW)};
+      }
+      return {w:srcW,h:srcH};
+    }
+    function updateInfo(){
+      const scale = imgNatural.w / bounds().w;
+      const srcW = Math.round(crop.w * scale), srcH = Math.round(crop.h * scale);
+      const out = outputSize();
+      cropInfo.textContent = `${srcW} × ${srcH}px`;
+      outputInfo.textContent = `${out.w} × ${out.h}px`;
+    }
+    function generateCanvas(){
+      const scale = imgNatural.w / bounds().w;
+      const sx = crop.x * scale, sy = crop.y * scale, sw = crop.w * scale, sh = crop.h * scale;
+      const out = outputSize();
+      const canvas = document.createElement('canvas');
+      canvas.width = out.w; canvas.height = out.h;
+      const ctx = canvas.getContext('2d');
+      if(outputFormat === 'image/jpeg'){
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      }
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(sourceImg, sx, sy, sw, sh, 0, 0, out.w, out.h);
+      return canvas;
+    }
+    function generatePreview(){
+      if(!sourceImg.src) return;
+      const canvas = generateCanvas();
+      const data = canvas.toDataURL(outputFormat, Number(qualityInput.value));
+      preview.innerHTML = `<img src="${data}" alt="裁切預覽">`;
+    }
+    document.getElementById('downloadBtn').addEventListener('click',()=>{
+      const canvas = generateCanvas();
+      const ext = outputFormat.split('/')[1].replace('jpeg','jpg');
+      canvas.toBlob(blob=>{
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `crop-output.${ext}`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }, outputFormat, Number(qualityInput.value));
+    });
+    document.getElementById('resetBtn').addEventListener('click', resetCrop);
+    document.getElementById('changeBtn').addEventListener('click',()=>{fileInput.value='';fileInput.click();});
+
+    document.getElementById('ratioBtns').addEventListener('click',e=>{
+      const btn = e.target.closest('.chip'); if(!btn) return;
+      document.querySelectorAll('#ratioBtns .chip').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active'); ratio = btn.dataset.ratio; presetSize = null; presetSelect.value=''; resetCrop();
+    });
+    document.getElementById('formatBtns').addEventListener('click',e=>{
+      const btn = e.target.closest('.chip'); if(!btn) return;
+      document.querySelectorAll('#formatBtns .chip').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active'); outputFormat = btn.dataset.format; generatePreview();
+    });
+    document.getElementById('sizeOriginal').addEventListener('click',()=>{customWidth=false;presetSize=null;widthInput.disabled=true;presetSelect.value='';toggleSizeBtns();updateInfo();generatePreview();});
+    document.getElementById('sizeCustom').addEventListener('click',()=>{customWidth=true;presetSize=null;widthInput.disabled=false;presetSelect.value='';toggleSizeBtns();updateInfo();generatePreview();});
+    function toggleSizeBtns(){document.getElementById('sizeOriginal').classList.toggle('active',!customWidth&&!presetSize);document.getElementById('sizeCustom').classList.toggle('active',customWidth&&!presetSize)}
+    widthInput.addEventListener('input',()=>{updateInfo();generatePreview();});
+    qualityInput.addEventListener('input',()=>{qualityValue.textContent = Math.round(qualityInput.value*100)+'%'; generatePreview();});
+    presetSelect.addEventListener('change',()=>{
+      if(!presetSelect.value) return;
+      const [w,h]=presetSelect.value.split('x').map(Number);
+      presetSize={w,h}; customWidth=false; widthInput.disabled=true; toggleSizeBtns();
+      ratio = String(w/h);
+      document.querySelectorAll('#ratioBtns .chip').forEach(b=>b.classList.remove('active'));
+      resetCrop();
+    });
+
+    cropBox.addEventListener('pointerdown',e=>{ if(e.target===handle) return; dragMode='move'; begin(e); });
+    handle.addEventListener('pointerdown',e=>{ dragMode='resize'; begin(e); e.stopPropagation(); });
+    function begin(e){
+      cropBox.setPointerCapture(e.pointerId);
+      start={x:e.clientX,y:e.clientY,crop:{...crop}};
+      window.addEventListener('pointermove',move);
+      window.addEventListener('pointerup',end,{once:true});
+    }
+    function move(e){
+      const dx=e.clientX-start.x, dy=e.clientY-start.y;
+      if(dragMode==='move'){
+        crop.x=start.crop.x+dx; crop.y=start.crop.y+dy;
+      }else{
+        const r=getCurrentRatio();
+        let w=start.crop.w+dx, h=start.crop.h+dy;
+        if(r){ h=w/r; }
+        crop.w=w; crop.h=h;
+      }
+      clampCrop(); render();
+    }
+    function end(){window.removeEventListener('pointermove',move);dragMode=null;}
+    window.addEventListener('resize',()=>{ if(sourceImg.src) resetCrop(); });
+  </script>
+</body>
+</html>
